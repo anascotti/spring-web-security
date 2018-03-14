@@ -1,4 +1,4 @@
-package org.springframework.hello;
+package org.springframework.hello.api.v1;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.hello.admin.AdminFormSecurityConfig;
-import org.springframework.hello.admin.MvcConfig;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,28 +15,25 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-@ContextConfiguration(classes = {AdminFormSecurityConfig.class, MvcConfig.class})
-public class AppTest {
+@ContextConfiguration(classes = {ApiSecurityConfig.class, HelloController.class})
+public class HelloControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     
     @Test
-    public void testHello() throws Exception {
-        mockMvc.perform(get("/hello").with(testUser())).andExpect(status().isOk());
+    public void testGreeting() throws Exception {
+        mockMvc.perform(get("/hello/api/v1/greeting").with(apiUser()))
+            .andExpect(status().isOk());
     }
-
+    
     @Test
-    public void testHelloRedirect() throws Exception {
-        mockMvc.perform(get("/hello")).andExpect(status().is3xxRedirection());
+    public void testGreeting401() throws Exception {
+        mockMvc.perform(get("/hello/api/v1/greeting"))
+            .andExpect(status().is(401));
     }
-
-    @Test
-    public void testLogin() throws Exception {
-        mockMvc.perform(get("/login").with(testUser())).andExpect(status().isOk());
-    }
-
-    public static RequestPostProcessor testUser() {
-        return user("user").password("password").roles("ADMIN");
+    
+    public static RequestPostProcessor apiUser() {
+        return user("user").password("password").roles("USER");
     }
 }

@@ -1,4 +1,4 @@
-package org.springframework.hello;
+package org.springframework.hello.admin;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
