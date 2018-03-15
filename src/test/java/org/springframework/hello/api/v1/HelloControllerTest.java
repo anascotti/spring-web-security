@@ -1,21 +1,23 @@
 package org.springframework.hello.api.v1;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.hello.WebSecurityConfig;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.MvcResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-@ContextConfiguration(classes = {ApiSecurityConfig.class, HelloController.class})
+@ContextConfiguration(classes = {WebSecurityConfig.class, HelloController.class})
 public class HelloControllerTest {
 
     @Autowired
@@ -23,7 +25,17 @@ public class HelloControllerTest {
     
     @Test
     public void testGreeting() throws Exception {
-        mockMvc.perform(get("/hello/api/v1/greeting").with(apiUser()))
+        
+        MvcResult loginResponse = mockMvc.perform(post("/hello/api/login")
+             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+             .content("{\"username\":\"ana\", \"password\":\"password\"}"))
+            .andExpect(status().isOk()).andReturn();
+        
+        String authHeader = loginResponse.getResponse().getHeader("Authorization").replaceAll("Bearer", "").trim();
+        System.out.println(authHeader);
+        
+        mockMvc.perform(get("/hello/api/v1/greeting")
+                .header("Authorization", authHeader))
             .andExpect(status().isOk());
     }
     
@@ -33,7 +45,4 @@ public class HelloControllerTest {
             .andExpect(status().is(401));
     }
     
-    public static RequestPostProcessor apiUser() {
-        return user("user").password("password").roles("USER");
-    }
 }

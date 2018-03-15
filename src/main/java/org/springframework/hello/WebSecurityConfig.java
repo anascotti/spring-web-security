@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 @EnableWebSecurity
 @Import({ApiSecurityConfig.class, AdminFormSecurityConfig.class})
 public class WebSecurityConfig {
+    
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

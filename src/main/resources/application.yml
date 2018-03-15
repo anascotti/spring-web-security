@@ -1,0 +1,3 @@
+users:
+  admin: adminpassword, ROLE_ADMIN
+  ana: anapassword, ROLE_USER
