@@ -16,6 +16,8 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
             http.csrf().disable()
                 .antMatcher("/hello/api/**")
+                .requiresChannel().anyRequest().requiresSecure()
+                .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/hello/api/login").permitAll()
                 .antMatchers("/hello/api/v1/**").authenticated()

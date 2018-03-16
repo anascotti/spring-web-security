@@ -25,24 +25,28 @@ public class HelloControllerTest {
     
     @Test
     public void testGreeting() throws Exception {
-        
-        MvcResult loginResponse = mockMvc.perform(post("/hello/api/login")
-             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-             .content("{\"username\":\"ana\", \"password\":\"password\"}"))
-            .andExpect(status().isOk()).andReturn();
-        
+
+        MvcResult loginResponse = mockMvc
+                .perform(
+                        post("/hello/api/login")
+                        .secure(true)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                        .content("{\"username\":\"ana\", \"password\":\"password\"}"))
+                .andExpect(status().isOk()).andReturn();
+
         String authHeader = loginResponse.getResponse().getHeader("Authorization").replaceAll("Bearer", "").trim();
         System.out.println(authHeader);
-        
-        mockMvc.perform(get("/hello/api/v1/greeting")
+
+        mockMvc.perform(
+                get("/hello/api/v1/greeting")
+                .secure(true)
                 .header("Authorization", authHeader))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
     
     @Test
     public void testGreeting401() throws Exception {
-        mockMvc.perform(get("/hello/api/v1/greeting"))
-            .andExpect(status().is(401));
+        mockMvc.perform(get("/hello/api/v1/greeting").secure(true)).andExpect(status().is(401));
     }
-    
+
 }
