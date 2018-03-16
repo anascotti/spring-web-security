@@ -1,3 +1,6 @@
-users:
-  admin: adminpassword, ROLE_ADMIN
-  ana: anapassword, ROLE_USER
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:awesome.jks 
+    key-store-password: password
+    key-password: password
