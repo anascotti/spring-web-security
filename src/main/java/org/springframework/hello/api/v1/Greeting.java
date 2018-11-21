@@ -12,7 +12,4 @@ public class Greeting {
         return msg;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }

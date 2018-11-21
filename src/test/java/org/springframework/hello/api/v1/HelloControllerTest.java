@@ -35,7 +35,6 @@ public class HelloControllerTest {
                 .andExpect(status().isOk()).andReturn();
 
         String authHeader = loginResponse.getResponse().getHeader("Authorization").replaceAll("Bearer", "").trim();
-        System.out.println(authHeader);
 
         mockMvc.perform(
                 get("/hello/api/v1/greeting")
